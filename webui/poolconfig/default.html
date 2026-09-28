@@ -10,48 +10,32 @@
       <h2>Getting started</h2>
       <hr />
 	  <p>
-		 To get started mining and use this pool you need the following
+		 To get started mining and use this pool you need the following:
 		 <ul>
 			<li>{{ coinName }} Wallet address</li>
-			<li>crypto mining software that supports the {{ coinName }} coin and aglorithm {{ aglorithm }}</li>
-			<li>hardware to run it on. This can be you home PC, mining rig, ASIC miner or cloud mining</li>
+			<li>Crypto mining software that supports {{ coinName }} and algorithm {{ algorithm }}</li>
+			<li>Hardware to run it on (Home PC, CPU/GPU mining rig, ASIC, etc.)</li>
 		 </ul>
 		 </br>
 		 <h4>{{ coinName }} Wallet address</h4>
-		 A wallet address is needed to payout you shares mined at this pool server.</br>
-		 When the total mined value is past the payout threshold, we will send your coin to this wallet address.</br>
+		 A wallet address is needed to payout your shares mined at this pool server.</br>
+		 When your total balance reaches or exceeds the payout threshold, your earnings are automatically sent to this wallet address.</br>
 		 </br>
 		 </br>
-		 <h4>crypto mining software</h4>
-		 To mine at this pool you can use any miner supporting the {{ aglorithm }} aglorithm or {{ coinName }} coin.</br>
-		 Use an search engine and search for "{{ coinName }} miner software".
-		 download the miner software and configure your crypto miner.</br>
+		 <h4>Crypto mining software</h4>
+		 To mine at this pool you can use any miner supporting the {{ algorithm }} algorithm or {{ coinName }} coin.</br>
+		 Search for "{{ coinName }} miner software", download it, and configure your miner using the stratum URL below.
       </p>
-	  <p>Where:</p>
+	  <p>Configuration parameters:</p>
               <ul>
-			    <li>POOL STRATUM ADDRESS AND PORT - one off the stratum addresses above in the Pool Configuration section depending on the difficuty you want</li>
-                <li>YOUR_WALLET_ADDRESS - your valid {{ coinName }} wallet address</li>
-				<li>WORKERNAME - an optional workername can be used to identify the miner or RIG</li>
-				<li>PASSWORD - use x or leave it blank</li>
+			    <li><strong>Stratum URL & Port</strong>: <code>stratum+tcp://{{ stratumAddress }}</code></li>
+                <li><strong>Username</strong>: <code>YOUR_WALLET_ADDRESS.WORKERNAME</code> (e.g. <code>YOUR_WALLET_ADDRESS.worker1</code>)</li>
+				<li><strong>Password</strong>: <code>x</code> (or leave blank)</li>
 				</br>
 				Optional:
-				<li>STATIC DIFFICULTY - to mine with a static (fixed) difficulty 
-				    simply use&nbsp;<code>d=xxx</code>&nbsp;as password in your
-					miner configuration where&nbsp;<code>xxx</code>&nbsp;denotes your
-					preferred difficulty.
-				</li>
+				<li><strong>Static Difficulty</strong>: to mine with a static (fixed) difficulty, use <code>d=xxx</code> as your password in your miner configuration where <code>xxx</code> denotes your preferred difficulty.</li>
 			  </ul>
       </br>
-      <hr />
-      <div class="well well-lg"><span>For AMD Graphic cards in a Windows system, make sure you add this at the top of your .bat file:</span></br>
-      <pre class="pre-help">
-setx GPU_FORCE_64BIT_PTR 0
-setx GPU_MAX_HEAP_SIZE 100
-setx GPU_USE_SYNC_OBJECTS 1
-setx GPU_MAX_ALLOC_PERCENT 100
-setx GPU_SINGLE_ALLOC_PERCENT 100
-      </pre>
-      </div>
     </div>
   </div>
 </div>

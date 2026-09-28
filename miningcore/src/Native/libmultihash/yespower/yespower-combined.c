@@ -1273,6 +1273,9 @@ void yespowerTIDE_hash(const char* input, char* output, uint32_t len)
 // Korsh (KSH): YesPower 1.0, N=256, r=8, no personalization, 80-byte header.
 void yespowerKorsh_hash(const char* input, char* output, uint32_t len)
 {
+    if (!input || !output || len < 80)
+        return;
+
     yespower_params_t korsh_yespower_1_0 = {
         .version = YESPOWER_1_0,
         .N = 256,
@@ -1280,7 +1283,7 @@ void yespowerKorsh_hash(const char* input, char* output, uint32_t len)
         .pers = NULL,
         .perslen = 0
     };
-    yespower_tls(input, 80, &korsh_yespower_1_0, (yespower_binary_t *)output);
+    yespower_tls((const uint8_t *)input, 80, &korsh_yespower_1_0, (yespower_binary_t *)output);
 }
 
 void cpupower_hash(const char* input, char* output, uint32_t len)

@@ -1,0 +1,20 @@
+[Unit]
+Description=Miningcore Mining Pool Daemon
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/pool/miningcore/build
+ExecStart=/opt/pool/miningcore/build/Miningcore -c /opt/pool/miningcore/build/config.json
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+LimitNPROC=65535
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=miningcore
+
+[Install]
+WantedBy=multi-user.target

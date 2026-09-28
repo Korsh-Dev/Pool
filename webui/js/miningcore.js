@@ -56,6 +56,39 @@ console.log('Page Load        : ', window.location.href);                     //
 
 currentPage = "index"
 
+// Sanitization function against XSS
+function escapeHtml(text) {
+  if (text === null || text === undefined) return "";
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function formatAddress(addr) {
+  if (!addr) return "";
+  if (addr.length <= 24) return escapeHtml(addr);
+  return escapeHtml(addr.substring(0, 12)) + " &hellip; " + escapeHtml(addr.substring(addr.length - 12));
+}
+
+function formatTxId(txid) {
+  if (!txid) return "n/a";
+  if (txid.length <= 32) return escapeHtml(txid);
+  return escapeHtml(txid.substring(0, 16)) + " &hellip; " + escapeHtml(txid.substring(txid.length - 16));
+}
+
+var statsDataTimer = null;
+var statsChartTimer = null;
+var dashboardTimer = null;
+
+function clearAllTimers() {
+  if (statsDataTimer) { clearInterval(statsDataTimer); statsDataTimer = null; }
+  if (statsChartTimer) { clearInterval(statsChartTimer); statsChartTimer = null; }
+  if (dashboardTimer) { clearInterval(dashboardTimer); dashboardTimer = null; }
+}
+
 // check browser compatibility
 var nua = navigator.userAgent;
 //var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
@@ -66,6 +99,7 @@ if(is_IE) {
 
 // Load INDEX Page content
 function loadIndex() {
+  clearAllTimers();
   $("div[class^='page-").hide();
   
   $(".page").hide();
@@ -170,7 +204,7 @@ function loadHomePage() {
 		if (typeof coinName === "undefined" || coinName === null) {coinName = value.coin.type;} 
         		
 		poolCoinTableTemplate += "<tr class='coin-table-row' href='#" + value.id + "'>";
-		poolCoinTableTemplate += "<td class='coin'><a href='#" + value.id + "'<span>" + coinLogo + coinName + " (" + value.coin.type.toUpperCase() + ") </span></a></td>";
+		poolCoinTableTemplate += "<td class='coin'><a href='#" + value.id + "'><span>" + coinLogo + escapeHtml(coinName) + " (" + escapeHtml(value.coin.type.toUpperCase()) + ") </span></a></td>";
 		poolCoinTableTemplate += "<td class='algo'>" + value.coin.algorithm + "</td>";
 		poolCoinTableTemplate += "<td class='miners'>" + value.poolStats.connectedMiners + "</td>";
 		poolCoinTableTemplate += "<td class='pool-hash'>" + _formatter(value.poolStats.poolHashrate, 5, "H/s") + "</td>";
@@ -215,49 +249,46 @@ function loadHomePage() {
 
 // Load STATS page content
 function loadStatsPage() {
-  //clearInterval();
-  setInterval(
-    (function load() {
-      loadStatsData();
-      return load;
-    })(),
-    60000
-  );
-  setInterval(
-    (function load() {
-      loadStatsChart();
-      return load;
-    })(),
-    600000
-  );
+  clearAllTimers();
+  loadStatsData();
+  loadStatsChart();
+  statsDataTimer = setInterval(loadStatsData, 60000);
+  statsChartTimer = setInterval(loadStatsChart, 600000);
 }
 
 
 // Load DASHBOARD page content
 function loadDashboardPage() {
   function render() {
-    //clearInterval();
-    setInterval(
-      (function load() {
-        loadDashboardData($("#walletAddress").val());
-        loadDashboardWorkerList($("#walletAddress").val());
-        loadDashboardChart($("#walletAddress").val());
-        return load;
-      })(),
-      60000
-    );
+    clearAllTimers();
+    var addr = $("#walletAddress").val();
+    if (!addr || addr.trim().length === 0) return;
+    loadDashboardData(addr);
+    loadDashboardWorkerList(addr);
+    loadDashboardChart(addr);
+    dashboardTimer = setInterval(function() {
+      var currentAddr = $("#walletAddress").val();
+      if (!currentAddr || currentAddr.trim().length === 0) return;
+      loadDashboardData(currentAddr);
+      loadDashboardWorkerList(currentAddr);
+      loadDashboardChart(currentAddr);
+    }, 60000);
   }
   var walletQueryString = window.location.hash.split(/[#/?]/)[3];
   if (walletQueryString) {
     var wallet = window.location.hash.split(/[#/?]/)[3].replace("address=", "");
     if (wallet) {
-      $(walletAddress).val(wallet);
+      $("#walletAddress").val(wallet);
       localStorage.setItem(currentPool + "-walletAddress", wallet);
       render();
     }
   }
   if (localStorage[currentPool + "-walletAddress"]) {
-    $("#walletAddress").val(localStorage[currentPool + "-walletAddress"]);
+    var savedAddr = localStorage[currentPool + "-walletAddress"];
+    $("#walletAddress").val(savedAddr);
+    if (!walletQueryString) {
+      render();
+    }
   }
 }
 
@@ -270,9 +301,7 @@ function loadMinersPage() {
       if (data.length > 0) {
         $.each(data, function(index, value) {
           minerList += "<tr>";
-          //minerList +=   "<td>" + value.miner + "</td>";
-		  minerList +=   '<td>' + value.miner.substring(0, 12) + ' &hellip; ' + value.miner.substring(value.miner.length - 12) + '</td>';
-          //minerList += '<td><a href="' + value.minerAddressInfoLink + '" target="_blank">' + value.miner.substring(0, 12) + ' &hellip; ' + value.miner.substring(value.miner.length - 12) + '</td>';
+		  minerList +=   '<td>' + formatAddress(value.miner) + '</td>';
           minerList += "<td>" + _formatter(value.hashrate, 5, "H/s") + "</td>";
           minerList += "<td>" + _formatter(value.sharesPerSecond, 5, "S/s") + "</td>";
           minerList += "</tr>";
@@ -359,9 +388,9 @@ function loadPaymentsPage() {
           var createDate = convertLocalDateToUTCDate(new Date(value.created),false);
           paymentList += '<tr>';
           paymentList +=   "<td>" + createDate + "</td>";
-          paymentList +=   '<td><a href="' + value.addressInfoLink + '" target="_blank">' + value.address.substring(0, 12) + ' &hellip; ' + value.address.substring(value.address.length - 12) + '</td>';
+          paymentList +=   '<td><a href="' + value.addressInfoLink + '" target="_blank">' + formatAddress(value.address) + '</a></td>';
           paymentList +=   '<td>' + _formatter(value.amount, 5, '') + '</td>';
-          paymentList +=   '<td colspan="2"><a href="' + value.transactionInfoLink + '" target="_blank">' + value.transactionConfirmationData.substring(0, 16) + ' &hellip; ' + value.transactionConfirmationData.substring(value.transactionConfirmationData.length - 16) + ' </a></td>';
+          paymentList +=   '<td colspan="2"><a href="' + (value.transactionInfoLink || '#') + '" target="_blank">' + formatTxId(value.transactionConfirmationData) + '</a></td>';
           paymentList += '</tr>';
         });
       } else {
@@ -396,10 +425,10 @@ function loadConnectPage() {
 			algorithm = value.coin.algorithm;
 			
 			// Connect Pool config table
-			connectPoolConfig += "<tr><td>Crypto Coin name</td><td>" + coinName + " (" + value.coin.type + ") </td></tr>";
+			connectPoolConfig += "<tr><td>Crypto Coin name</td><td>" + escapeHtml(coinName) + " (" + escapeHtml(value.coin.type) + ") </td></tr>";
 			//connectPoolConfig += "<tr><td>Coin Family line </td><td>" + value.coin.family + "</td></tr>";
-			connectPoolConfig += "<tr><td>Coin Algorithm</td><td>" + value.coin.algorithm + "</td></tr>";
-			connectPoolConfig += '<tr><td>Pool Wallet</td><td><a href="' + value.addressInfoLink + '" target="_blank">' + value.address.substring(0, 12) + " &hellip; " + value.address.substring(value.address.length - 12) + "</a></td></tr>";
+			connectPoolConfig += "<tr><td>Coin Algorithm</td><td>" + escapeHtml(value.coin.algorithm) + "</td></tr>";
+			connectPoolConfig += '<tr><td>Pool Wallet</td><td><a href="' + value.addressInfoLink + '" target="_blank">' + formatAddress(value.address) + "</a></td></tr>";
 			connectPoolConfig += "<tr><td>Payout Scheme</td><td>" + value.paymentProcessing.payoutScheme + "</td></tr>";
 			connectPoolConfig += "<tr><td>Minimum Payment</td><td>" + value.paymentProcessing.minimumPayment + " " + value.coin.type + "</td></tr>";
 			if (typeof value.paymentProcessing.minimumPaymentToPaymentId !== "undefined") {
@@ -407,7 +436,7 @@ function loadConnectPage() {
 			}
 			connectPoolConfig += "<tr><td>Pool Fee</td><td>" + value.poolFeePercent + "%</td></tr>";
 			$.each(value.ports, function(port, options) {
-				connectPoolConfig += "<tr><td>stratum+tcp://" + coinType + "." + stratumAddress + ":" + port + "</td><td>";
+				connectPoolConfig += "<tr><td>stratum+tcp://" + stratumAddress + ":" + port + "</td><td>";
 				if (typeof options.varDiff !== "undefined" && options.varDiff != null) {
 					connectPoolConfig += "Difficulty Variable / " + options.varDiff.minDiff + " &harr; ";
 					if (typeof options.varDiff.maxDiff === "undefined" || options.varDiff.maxDiff == null) {
@@ -436,18 +465,22 @@ function loadConnectPage() {
 			  function(responseText){
 				var config = $("#miner-config")
                 .html()
-				.replace(/{{ stratumAddress }}/g, coinType + "." + stratumAddress + ":" + defaultPort)
-				.replace(/{{ coinName }}/g, coinName)
-				.replace(/{{ aglorithm }}/g, algorithm);
+				.replace(/{{ stratumAddress }}/g, stratumAddress + ":" + defaultPort)
+				.replace(/{{ coinName }}/g, escapeHtml(coinName))
+				.replace(/{{ (aglorithm|algorithm) }}/g, escapeHtml(algorithm))
+				.replace(/{{ algorithm }}/g, escapeHtml(algorithm))
+				.replace(/{{ aglorithm }}/g, escapeHtml(algorithm));
 				$(this).html(config);  
 			  }
 			);
 		  } else {
 			var config = $("#miner-config")
             .html()
-            .replace(/{{ stratumAddress }}/g, coinType + "." + stratumAddress + ":" + defaultPort)
-			.replace(/{{ coinName }}/g, coinName)
-			.replace(/{{ aglorithm }}/g, algorithm);
+            .replace(/{{ stratumAddress }}/g, stratumAddress + ":" + defaultPort)
+			.replace(/{{ coinName }}/g, escapeHtml(coinName))
+			.replace(/{{ (aglorithm|algorithm) }}/g, escapeHtml(algorithm))
+			.replace(/{{ algorithm }}/g, escapeHtml(algorithm))
+			.replace(/{{ aglorithm }}/g, escapeHtml(algorithm));
             $(this).html(config);
 		  }
         }
@@ -470,18 +503,19 @@ function loadConnectPage() {
 // Dashboard - load wallet stats
 function loadWallet() {
   console.log( 'Loading wallet address:',$("#walletAddress").val() );
-  if ($("#walletAddress").val().length > 0) {
-    localStorage.setItem(currentPool + "-walletAddress", $("#walletAddress").val() );
+  var wallet = $("#walletAddress").val();
+  if (wallet && wallet.length > 0) {
+    localStorage.setItem(currentPool + "-walletAddress", wallet);
   }
-  var coin = window.location.hash.split(/[#/?]/)[1];
-  var currentPage = window.location.hash.split(/[#/?]/)[2] || "stats";
-  window.location.href = "#" + currentPool + "/" + currentPage + "?address=" + $("#walletAddress").val();
+  var currentPage = window.location.hash.split(/[#/?]/)[2] || "dashboard";
+  window.location.href = "#" + currentPool + "/" + currentPage + "?address=" + wallet;
 }
 
 
 // General formatter function
 function _formatter(value, decimal, unit) {
-  if (value === 0) {
+  unit = unit || "";
+  if (value === null || value === undefined || isNaN(value) || value === 0) {
     return "0 " + unit;
   } else {
     var si = [
@@ -516,7 +550,7 @@ function convertLocalDateToUTCDate(date, toUTC) {
   } else {
     date = localTime - localOffset;
   }
-  newDate = new Date(date);
+  var newDate = new Date(date);
   return newDate;
 }
 
@@ -540,17 +574,12 @@ function scrollPageTop() {
 }
 
 
-// Check if file exits
-function doesFileExist(urlToFile) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('HEAD', urlToFile, false);
-    xhr.send();
-     
-    if (xhr.status == "404") {
-        return false;
-    } else {
-        return true;
-    }
+// Check if file exits (non-blocking fallback)
+function doesFileExist(urlToFile, callback) {
+    if (typeof callback !== 'function') return false;
+    fetch(urlToFile, { method: 'HEAD' })
+      .then(function(res) { callback(res.ok); })
+      .catch(function() { callback(false); });
 }
 
 
@@ -678,16 +707,15 @@ function loadDashboardData(walletAddress) {
     .done(function(data) {
       $("#pendingShares").text(_formatter(data.pendingShares, 0, ""));
       var workerHashRate = 0;
-      if (data.performance) {
+      if (data.performance && data.performance.workers) {
         $.each(data.performance.workers, function(index, value) {
-          workerHashRate += value.hashrate;
+          workerHashRate += value.hashrate || 0;
         });
       }
       $("#minerHashRate").text(_formatter(workerHashRate, 5, "H/s"));
       $("#pendingBalance").text(_formatter(data.pendingBalance, 5, ""));
       $("#paidBalance").text(_formatter(data.todayPaid, 5, ""));
-      $("#lifetimeBalance").text(_formatter(data.pendingBalance + data.totalPaid, 5, "")
-      );
+      $("#lifetimeBalance").text(_formatter((data.pendingBalance || 0) + (data.totalPaid || 0), 5, ""));
     })
     .fail(function() {
       $.notify(
@@ -708,8 +736,8 @@ function loadDashboardWorkerList(walletAddress) {
   return $.ajax(API + "pools/" + currentPool + "/miners/" + walletAddress)
     .done(function(data) {
       var workerList = "";
-      if (data.performance) {
-        var workerCount = 0;
+      var workerCount = 0;
+      if (data.performance && data.performance.workers) {
         $.each(data.performance.workers, function(index, value) {
           workerCount++;
           workerList += "<tr>";
@@ -717,7 +745,7 @@ function loadDashboardWorkerList(walletAddress) {
           if (index.length === 0) {
             workerList += "<td>Unnamed</td>";
           } else {
-            workerList += "<td>" + index + "</td>";
+            workerList += "<td>" + escapeHtml(index) + "</td>";
           }
           workerList += "<td>" + _formatter(value.hashrate, 5, "H/s") + "</td>";
           workerList +=

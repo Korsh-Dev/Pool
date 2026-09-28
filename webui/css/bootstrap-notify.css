@@ -1,0 +1,53 @@
+/* Bootstrap Notify Styling */
+[data-notify="container"] {
+  width: auto;
+  min-width: 280px;
+  max-width: 450px;
+  margin-bottom: 8px;
+  z-index: 1060;
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  padding: 12px 18px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+[data-notify="container"].alert-danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+[data-notify="container"].alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+
+[data-notify="container"].alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+
+[data-notify="container"].alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+[data-notify="icon"] {
+  margin-right: 8px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+[data-notify="title"] {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 3px;
+}
+
+[data-notify="message"] {
+  display: inline-block;
+}

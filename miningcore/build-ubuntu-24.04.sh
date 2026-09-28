@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
 
-# Install prerequisites
+# Ubuntu 24.04 LTS (Noble Numbat) has .NET 9 support in official/backport channels
 sudo apt-get update
 sudo apt-get -y install software-properties-common wget
 
-# Add dotnet backports PPA non-interactively
-sudo add-apt-repository -y ppa:dotnet/backports
+sudo add-apt-repository -y ppa:dotnet/backports || true
 sudo apt-get update
 
 # Install dev-dependencies and build tools

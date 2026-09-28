@@ -2,5 +2,5 @@
 
 (cd src && \
 BUILDIR=${1:-../build} && \
-echo "Building into $BUILDIR" && \
-dotnet build -o $BUILDIR)
+echo "Building Release into $BUILDIR" && \
+dotnet build -c Release -o $BUILDIR)

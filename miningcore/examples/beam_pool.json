@@ -1,4 +1,4 @@
-﻿{
+{
     "logging": {
         "level": "info",
         "enableConsoleLog": true,
@@ -114,7 +114,7 @@
         "daemons": [
             {
                 "host": "127.0.0.1",
-                "port": <stratum_port>,
+                "port": 10005,
                 "user": null,
                 "password": null,
                 "apiKey": "<Miner registration key <api_key>"

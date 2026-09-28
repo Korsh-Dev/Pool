@@ -10,6 +10,7 @@ public unsafe class YespowerKorsh : IHashAlgorithm
     public void Digest(ReadOnlySpan<byte> data, Span<byte> result, params object[] extra)
     {
         Contract.Requires<ArgumentException>(result.Length >= 32);
+        Contract.Requires<ArgumentException>(data.Length >= 80);
 
         fixed (byte* input = data)
         {

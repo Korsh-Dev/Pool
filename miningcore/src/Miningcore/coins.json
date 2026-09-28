@@ -8165,7 +8165,7 @@
    ]
   },
   "shareMultiplier": 65536,
-  "hasMasterNodes": true,
+  "hasMasterNodes": false,
   "explorerBlockLink": "https://explorer.195-26-244-209.sslip.io/block/$hash$",
   "explorerTxLink": "https://explorer.195-26-244-209.sslip.io/tx/{0}",
   "explorerAccountLink": "https://explorer.195-26-244-209.sslip.io/address/{0}"

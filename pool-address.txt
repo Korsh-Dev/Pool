@@ -1,1 +1,10 @@
-SMnZRoh3cfKdVV4PCRWNJYHG9zXiBah2Ai
+# ==============================================================================
+# Direcciones de Billetera Korsh (KSH) para Produccion
+# ==============================================================================
+# 1. Direccion del Pool (Mining / Block Reward Destination):
+#    Colocar en 'pools[0].address' dentro de korsh_pool.json
+POOL_ADDRESS=SRM6BKtKbxUe1GYWZW3GdGkvAqicu7YRyu
+
+# 2. Direccion de Comision del Operador (Operator Fee Recipient - 1%):
+#    Colocar en 'pools[0].rewardRecipients[0].address' dentro de korsh_pool.json
+OPERATOR_FEE_ADDRESS=SMnZRoh3cfKdVV4PCRWNJYHG9zXiBah2Ai

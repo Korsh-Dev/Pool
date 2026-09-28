@@ -2,7 +2,7 @@
   "logging": {
     "level": "info",
     "enableConsoleLog": true,
-    "enableConsoleColors": false,
+    "enableConsoleColors": true,
     "logFile": "pool.log",
     "apiLogFile": "",
     "logBaseDirectory": "",
@@ -10,8 +10,8 @@
   },
   "banning": {
     "manager": "Integrated",
-    "banOnJunkReceive": false,
-    "banOnInvalidShares": false
+    "banOnJunkReceive": true,
+    "banOnInvalidShares": true
   },
   "notifications": {
     "enabled": false
@@ -28,6 +28,7 @@
   "paymentProcessing": {
     "enabled": true,
     "interval": 600,
+    "coinbaseString": "Korsh Mining Pool",
     "shareRecoveryFile": "recovered-shares.txt"
   },
   "api": {
@@ -36,7 +37,7 @@
     "port": 4000,
     "metricsIpWhitelist": [],
     "rateLimiting": {
-      "disabled": true
+      "disabled": false
     }
   },
   "clusterName": "korsh-vps",
@@ -57,7 +58,10 @@
       "clientConnectionTimeout": 600,
       "jobRebroadcastTimeout": 10,
       "banning": {
-        "enabled": false
+        "enabled": true,
+        "time": 600,
+        "invalidPercent": 50,
+        "checkThreshold": 50
       },
       "ports": {
         "3333": {
@@ -86,7 +90,7 @@
         "minimumPayment": 0.5,
         "payoutScheme": "PPLNS",
         "payoutSchemeConfig": {
-          "factor": 0.5
+          "factor": 2.0
         }
       }
     }
