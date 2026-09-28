@@ -1,0 +1,13 @@
+# secrets & local config
+korsh_pool.json
+*.bak-*
+app/
+app.bak-*
+# build artifacts
+bin/
+obj/
+*.o
+*.so
+*.dll.tmp
+# node
+node_modules/

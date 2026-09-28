@@ -1,0 +1,94 @@
+{
+  "logging": {
+    "level": "info",
+    "enableConsoleLog": true,
+    "enableConsoleColors": false,
+    "logFile": "pool.log",
+    "apiLogFile": "",
+    "logBaseDirectory": "",
+    "perPoolLogFile": false
+  },
+  "banning": {
+    "manager": "Integrated",
+    "banOnJunkReceive": false,
+    "banOnInvalidShares": false
+  },
+  "notifications": {
+    "enabled": false
+  },
+  "persistence": {
+    "postgres": {
+      "host": "127.0.0.1",
+      "port": 5432,
+      "user": "miningcore",
+      "password": "CHANGE_ME_postgres_password",
+      "database": "miningcore"
+    }
+  },
+  "paymentProcessing": {
+    "enabled": true,
+    "interval": 600,
+    "shareRecoveryFile": "recovered-shares.txt"
+  },
+  "api": {
+    "enabled": true,
+    "listenAddress": "127.0.0.1",
+    "port": 4000,
+    "metricsIpWhitelist": [],
+    "rateLimiting": {
+      "disabled": true
+    }
+  },
+  "clusterName": "korsh-vps",
+  "pools": [
+    {
+      "id": "korsh",
+      "enabled": true,
+      "coin": "korsh",
+      "address": "SRM6BKtKbxUe1GYWZW3GdGkvAqicu7YRyu",
+      "rewardRecipients": [
+        {
+          "type": "op",
+          "address": "SMnZRoh3cfKdVV4PCRWNJYHG9zXiBah2Ai",
+          "percentage": 1.0
+        }
+      ],
+      "blockRefreshInterval": 500,
+      "clientConnectionTimeout": 600,
+      "jobRebroadcastTimeout": 10,
+      "banning": {
+        "enabled": false
+      },
+      "ports": {
+        "3333": {
+          "name": "CPU",
+          "listenAddress": "0.0.0.0",
+          "difficulty": 1.0,
+          "varDiff": {
+            "minDiff": 0.1,
+            "maxDiff": 256,
+            "targetTime": 15,
+            "retargetTime": 90,
+            "variancePercent": 30
+          }
+        }
+      },
+      "daemons": [
+        {
+          "host": "127.0.0.1",
+          "port": 9776,
+          "user": "korshrpc",
+          "password": "CHANGE_ME_rpc_password"
+        }
+      ],
+      "paymentProcessing": {
+        "enabled": true,
+        "minimumPayment": 0.5,
+        "payoutScheme": "PPLNS",
+        "payoutSchemeConfig": {
+          "factor": 0.5
+        }
+      }
+    }
+  ]
+}
