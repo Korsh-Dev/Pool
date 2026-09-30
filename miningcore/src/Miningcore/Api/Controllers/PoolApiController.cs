@@ -65,7 +65,7 @@ public class PoolApiController : ApiControllerBase
             Pools = await Task.WhenAll(poolTasks)
         };
 
-        if(clusterConfig.CoinMarketCapApi.Enabled)
+        if(clusterConfig.CoinMarketCapApi != null && clusterConfig.CoinMarketCapApi.Enabled)
         {
             var symbols = string.Join(",", response?.Pools?.Select(Q => Q.Coin.Symbol));
             if(!string.IsNullOrWhiteSpace(symbols))

@@ -11,7 +11,12 @@ obj/
 *.dll.tmp
 # node
 node_modules/
-# local audit reports
+# local audit reports & test scripts
 auditoria_detallada_korsh_pool.txt
 *.log
 .DS_Store
+test_*.py
+test_*.sh
+rpc_proxy.py
+setup_db.sh
+
