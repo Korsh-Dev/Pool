@@ -8145,7 +8145,7 @@
   "canonicalName": "Korsh",
   "symbol": "KSH",
   "family": "bitcoin",
-  "website": "https://korsh.195-26-244-209.sslip.io/",
+  "website": "https://korsh.org/",
   "market": "",
   "twitter": "",
   "telegram": "",
@@ -8166,8 +8166,8 @@
   },
   "shareMultiplier": 65536,
   "hasMasterNodes": false,
-  "explorerBlockLink": "https://explorer.195-26-244-209.sslip.io/block/$hash$",
-  "explorerTxLink": "https://explorer.195-26-244-209.sslip.io/tx/{0}",
-  "explorerAccountLink": "https://explorer.195-26-244-209.sslip.io/address/{0}"
+  "explorerBlockLink": "https://explorer.korsh.org/block/$hash$",
+  "explorerTxLink": "https://explorer.korsh.org/tx/{0}",
+  "explorerAccountLink": "https://explorer.korsh.org/address/{0}"
  }
 }
