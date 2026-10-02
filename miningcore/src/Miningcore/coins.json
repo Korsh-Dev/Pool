@@ -8165,7 +8165,7 @@
    ]
   },
   "shareMultiplier": 65536,
-  "hasMasterNodes": false,
+  "hasMasterNodes": true,
   "explorerBlockLink": "https://explorer.korsh.org/block/$hash$",
   "explorerTxLink": "https://explorer.korsh.org/tx/{0}",
   "explorerAccountLink": "https://explorer.korsh.org/address/{0}"
