@@ -82,7 +82,8 @@
   var cachedPerfStats = null;
   var aggregatedMinersHash = 0;
   var cachedChartPoints = [];
-  var currentActiveTab = "miners"; // "miners", "blocks", "payments"
+  var currentActiveTab = "miners";
+  var cachedTotalBlocks = null; // "miners", "blocks", "payments"
   var currentSelectedMinerSoftware = "cpuminer"; // "cpuminer", "srb", "native"
 
   /* ==========================================================================
@@ -309,6 +310,7 @@
       }
       if (p.totalBlocks != null) {
         totalBlocksCount = p.totalBlocks;
+        cachedTotalBlocks = p.totalBlocks;
       }
       if (p.poolStats && p.poolStats.connectedMiners != null && p.poolStats.connectedMiners > 0) {
         connectedMinersCount = p.poolStats.connectedMiners;
@@ -359,10 +361,11 @@
     if (hudConnectedMiners) hudConnectedMiners.textContent = connectedMinersCount;
     if (hudPoolEffort) hudPoolEffort.textContent = poolEffort > 0 ? poolEffort.toFixed(1) + "%" : "0.0%";
 
-    // Total blocks discovered by the pool
-    if (hudBlocksCount) {
-      var displayBlocks = totalBlocksCount != null ? totalBlocksCount : rawBlocksList.length;
-      hudBlocksCount.textContent = displayBlocks > 0 ? fmtNum(displayBlocks, 0) : "0";
+    // Total blocks discovered by the pool (avoid flashing rawBlocksList.length page size)
+    if (totalBlocksCount != null) {
+      cachedTotalBlocks = totalBlocksCount;
+      if (hudBlocksCount) hudBlocksCount.textContent = fmtNum(totalBlocksCount, 0);
+      if (blocksTableBadge) blocksTableBadge.textContent = totalBlocksCount;
     }
 
     // Pool Share Percentage of Total Network Hashrate
@@ -568,14 +571,18 @@
      ========================================================================== */
   function renderBlocks(list) {
     rawBlocksList = Array.isArray(list) ? list : [];
-    var count = rawBlocksList.length;
-    var totalDiscovered =
-      cachedPoolConfig && cachedPoolConfig.pool && cachedPoolConfig.pool.totalBlocks != null
-        ? cachedPoolConfig.pool.totalBlocks
-        : count;
 
-    if (blocksTableBadge) blocksTableBadge.textContent = totalDiscovered;
-    if (hudBlocksCount) hudBlocksCount.textContent = fmtNum(totalDiscovered, 0);
+    // Prioritize cachedTotalBlocks or cfg.pool.totalBlocks over list length (list is paginated!)
+    var poolTotal = cachedTotalBlocks != null
+      ? cachedTotalBlocks
+      : (cachedPoolConfig && cachedPoolConfig.pool && cachedPoolConfig.pool.totalBlocks != null
+          ? cachedPoolConfig.pool.totalBlocks
+          : null);
+
+    if (poolTotal != null) {
+      if (blocksTableBadge) blocksTableBadge.textContent = poolTotal;
+      if (hudBlocksCount) hudBlocksCount.textContent = fmtNum(poolTotal, 0);
+    }
 
     filterExplorer();
   }
@@ -1374,60 +1381,43 @@
   }
 
   /* ==========================================================================
-     MOBILE NAVIGATION DRAWER CONTROLLER
+     MOBILE NAVIGATION DROPDOWN CONTROLLER
      ========================================================================== */
   var mobileMenuBtn = document.getElementById("mobileMenuBtn");
-  var mobileNavDrawer = document.getElementById("mobileNavDrawer");
-  var mobileNavBackdrop = document.getElementById("mobileNavBackdrop");
-  var mobileNavClose = document.getElementById("mobileNavClose");
+  var mobileDropdownMenu = document.getElementById("mobileDropdownMenu");
 
-  function openMobileNav() {
-    if (mobileNavDrawer) mobileNavDrawer.classList.add("open");
-    if (mobileNavBackdrop) mobileNavBackdrop.classList.add("open");
-    if (mobileMenuBtn) mobileMenuBtn.classList.add("active");
-    document.body.style.overflow = "hidden";
-  }
+  if (mobileMenuBtn && mobileDropdownMenu) {
+    mobileMenuBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var isHidden = (mobileDropdownMenu.style.display === "none" || !mobileDropdownMenu.style.display);
+      mobileDropdownMenu.style.display = isHidden ? "flex" : "none";
+      mobileMenuBtn.classList.toggle("active", isHidden);
+    });
 
-  function closeMobileNav() {
-    if (mobileNavDrawer) mobileNavDrawer.classList.remove("open");
-    if (mobileNavBackdrop) mobileNavBackdrop.classList.remove("open");
-    if (mobileMenuBtn) mobileMenuBtn.classList.remove("active");
-    document.body.style.overflow = "";
-  }
+    // Close on click outside
+    document.addEventListener("click", function (e) {
+      if (mobileDropdownMenu.style.display !== "none" && !mobileDropdownMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        mobileDropdownMenu.style.display = "none";
+        mobileMenuBtn.classList.remove("active");
+      }
+    });
 
-  if (mobileMenuBtn) {
-    mobileMenuBtn.addEventListener("click", function () {
-      if (mobileNavDrawer && mobileNavDrawer.classList.contains("open")) {
-        closeMobileNav();
-      } else {
-        openMobileNav();
+    // Close on link click
+    mobileDropdownMenu.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () {
+        mobileDropdownMenu.style.display = "none";
+        mobileMenuBtn.classList.remove("active");
+      });
+    });
+
+    // Close on ESC key
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && mobileDropdownMenu.style.display !== "none") {
+        mobileDropdownMenu.style.display = "none";
+        mobileMenuBtn.classList.remove("active");
       }
     });
   }
-
-  if (mobileNavClose) {
-    mobileNavClose.addEventListener("click", closeMobileNav);
-  }
-
-  if (mobileNavBackdrop) {
-    mobileNavBackdrop.addEventListener("click", closeMobileNav);
-  }
-
-  // Close drawer on any internal link click
-  if (mobileNavDrawer) {
-    mobileNavDrawer.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        closeMobileNav();
-      });
-    });
-  }
-
-  // Close drawer on ESC key
-  window.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && mobileNavDrawer && mobileNavDrawer.classList.contains("open")) {
-      closeMobileNav();
-    }
-  });
 
   /* ==========================================================================
      10. MAIN PERIODIC POLLING TICK
@@ -1463,7 +1453,7 @@
       .catch(function () {});
 
     // 4. Fetch /api/pools/korsh/blocks (Solved blocks)
-    fetchJSON(API_BLOCKS)
+    fetchJSON(API_BLOCKS + "?pageSize=100")
       .then(renderBlocks)
       .catch(function () {});
 

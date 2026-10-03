@@ -359,6 +359,11 @@ a:hover {
   min-width: 0;
 }
 
+.command-input-field {
+  min-width: 0;
+  width: 100%;
+}
+
 .command-icon {
   color: var(--text-muted);
   flex-shrink: 0;
@@ -873,13 +878,6 @@ a:hover {
   background: rgba(0, 204, 82, 0.15);
 }
 
-.tab-txt-short {
-  display: none;
-}
-.tab-txt-full {
-  display: inline;
-}
-
 .explorer-filter-input {
   background: var(--surface);
   border: 1px solid var(--surface-border);
@@ -1147,188 +1145,79 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
 }
 
 
-/* ==========================================================================
-   MOBILE NAVIGATION DRAWER & BUTTON STYLES
-   ========================================================================== */
+/* Mobile Navigation Button & Dropdown */
 .mobile-menu-btn {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  padding: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: 8px;
   cursor: pointer;
   color: var(--text-bright);
   transition: all 0.2s ease;
-  flex-direction: column;
-  gap: 4px;
   -webkit-tap-highlight-color: transparent;
 }
-.mobile-menu-btn:hover, .mobile-menu-btn:active {
+.mobile-menu-btn:hover, .mobile-menu-btn.active {
   border-color: var(--primary);
+  color: var(--primary);
   background: rgba(0, 204, 82, 0.1);
-  box-shadow: 0 0 12px var(--primary-glow);
-}
-.mobile-menu-btn .hamburger-bar {
-  display: block;
-  width: 18px;
-  height: 2px;
-  background: var(--text-bright);
-  border-radius: 2px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.mobile-menu-btn.active .hamburger-bar:nth-child(1) {
-  transform: translateY(6px) rotate(45deg);
-}
-.mobile-menu-btn.active .hamburger-bar:nth-child(2) {
-  opacity: 0;
-  transform: translateX(-6px);
-}
-.mobile-menu-btn.active .hamburger-bar:nth-child(3) {
-  transform: translateY(-6px) rotate(-45deg);
+  box-shadow: 0 0 10px var(--primary-glow);
 }
 
-.mobile-nav-backdrop {
+.mobile-dropdown-menu {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.mobile-nav-backdrop.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.mobile-nav-drawer {
-  position: fixed;
-  top: 0;
+  top: 64px;
+  left: 0;
   right: 0;
-  bottom: 0;
-  width: 84%;
-  max-width: 320px;
-  background: rgba(7, 10, 8, 0.97);
-  border-left: 1px solid var(--surface-border);
-  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 204, 82, 0.08);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 20px 18px;
-}
-.mobile-nav-drawer.open {
-  transform: translateX(0);
-}
-
-.mobile-nav-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 16px;
+  background: rgba(8, 12, 9, 0.98);
   border-bottom: 1px solid var(--surface-border);
-  margin-bottom: 16px;
-}
-.mobile-nav-close {
-  background: var(--bg-subtle);
-  border: 1px solid var(--surface-border);
-  color: var(--text-dim);
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.mobile-nav-close:hover, .mobile-nav-close:active {
-  color: #FFFFFF;
-  border-color: var(--primary);
-  background: rgba(0, 204, 82, 0.1);
-}
-
-.mobile-nav-links {
-  display: flex;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 99;
   flex-direction: column;
-  gap: 6px;
-  flex: 1;
+  padding: 12px 20px 16px;
+  gap: 4px;
 }
-.mobile-nav-link {
+.mobile-menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  min-height: 44px;
+  padding: 11px 12px;
+  min-height: 42px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-dim);
-  border-radius: 10px;
   text-decoration: none;
+  border-radius: 8px;
   transition: all 0.15s ease;
-  background: transparent;
   -webkit-tap-highlight-color: transparent;
 }
-.mobile-nav-link:hover, .mobile-nav-link:active {
+.mobile-menu-item:hover, .mobile-menu-item:active {
   color: var(--text-bright);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 204, 82, 0.08);
 }
-.mobile-nav-link.external {
+.mobile-menu-item.external {
   color: var(--text-muted);
   font-size: 13px;
 }
-.mobile-nav-link.external:hover, .mobile-nav-link.external:active {
+.mobile-menu-item.external:hover {
   color: var(--primary);
 }
-.mobile-nav-divider {
+.mobile-menu-divider {
   height: 1px;
   background: var(--surface-border);
-  margin: 10px 0 6px;
-}
-.mobile-nav-section-title {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--font-mono);
-  color: var(--text-muted);
-  padding: 4px 14px;
-}
-.mobile-nav-footer {
-  padding-top: 14px;
-  border-top: 1px solid var(--surface-border);
-  margin-top: 16px;
-}
-.mobile-nav-algo {
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-bottom: 4px;
-}
-.mobile-nav-algo strong {
-  color: var(--primary);
-}
-.mobile-nav-copy {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
+  margin: 6px 0;
 }
 
 /* ==========================================================================
    9. RESPONSIVE DESIGN POLISH & MOBILE OPTIMIZATIONS
    ========================================================================== */
 
-/* Breakpoint 1: Medium screens (< 860px) - Header & Navigation */
+/* Breakpoint 1: Medium screens (< 860px) - Toggle Hamburger */
 @media (max-width: 860px) {
   .nav-links-cluster {
     display: none !important;
@@ -1358,17 +1247,14 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     gap: 16px;
   }
   .luxor-container {
-    padding: 0 14px 50px;
+    padding: 0 16px 50px;
   }
   .luxor-card {
-    padding: 16px;
+    padding: 18px;
     border-radius: 12px;
   }
   .worker-telemetry-panel {
-    padding: 16px;
-    border-radius: 12px;
-  }
-  .explorer-card-section {
+    padding: 18px;
     border-radius: 12px;
   }
 
@@ -1379,45 +1265,41 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     font-size: 16px !important;
   }
 
-  /* Compact Table styling for mobile */
+  /* Responsive Tables */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
   table.luxor-table {
-    min-width: 520px;
+    min-width: 580px;
   }
   table.luxor-table th,
   table.luxor-table td {
-    padding: 11px 10px;
-    font-size: 11.5px;
-  }
-  .addr-copyable span {
-    font-size: 11.5px;
-  }
-  .btn-table-action {
-    padding: 4px 10px;
-    font-size: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
   }
 }
 
 /* Breakpoint 3: Small Mobiles (< 580px) */
 @media (max-width: 580px) {
-  /* Hero typography & spacing */
   .luxor-hero {
-    padding: 24px 0 24px;
+    padding: 24px 0 20px;
   }
   .hero-supertitle {
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 10.5px;
     padding: 3px 10px;
     margin-bottom: 12px;
   }
   .hero-main-title {
-    font-size: clamp(23px, 6.8vw, 32px);
+    font-size: clamp(24px, 6.2vw, 36px);
     line-height: 1.18;
     margin-bottom: 10px;
   }
   .hero-subtitle-text {
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 20px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin-bottom: 22px;
     padding: 0 4px;
   }
 
@@ -1425,17 +1307,11 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
   .command-search-bar {
     flex-direction: column;
     align-items: stretch;
-    padding: 10px 12px;
-    gap: 10px;
-    border-radius: 10px;
+    padding: 12px 14px;
+    gap: 12px;
+    border-radius: 12px;
   }
   .command-input-group {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .command-input-field {
     width: 100%;
     min-width: 0;
   }
@@ -1454,64 +1330,35 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     font-weight: 600;
   }
 
-  /* 2x2 KPI Grid Dashboard instead of 4 giant vertical cards */
+  /* KPI cards spacing on mobile (keeping clean 1-column layout without squishing) */
   .kpi-metrics-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px;
-    margin-top: 22px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 24px;
   }
   .kpi-card {
-    padding: 12px 14px;
+    padding: 16px 18px;
     border-radius: 10px;
   }
-  .kpi-card-header {
-    margin-bottom: 8px;
-  }
-  .kpi-label {
-    font-size: 9.5px;
-    letter-spacing: 0.03em;
-  }
-  .kpi-badge {
-    font-size: 9px;
-    padding: 1px 6px;
-  }
   .kpi-value-massive {
-    font-size: 21px;
-    gap: 4px;
-  }
-  .kpi-value-massive .unit {
-    font-size: 11px;
-  }
-  .kpi-subtext {
-    font-size: 10px;
-    margin-top: 8px;
+    font-size: 26px;
   }
 
-  /* 2-column Worker Metrics Grid */
+  /* Worker telemetry pills on mobile */
   .worker-stat-pills-row {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px;
-  }
-  .worker-stat-box {
-    padding: 10px 12px;
-    border-radius: 8px;
-  }
-  .worker-stat-box .box-lbl {
-    font-size: 9px;
-  }
-  .worker-stat-box .box-val {
-    font-size: 15px;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
-  /* Stratum Endpoint Box - Stack URL & Button */
+  /* Stratum quick connect on mobile */
   .stratum-endpoint-box {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
-    padding: 12px;
+    padding: 12px 14px;
   }
   .stratum-url-lbl {
-    font-size: 11px;
+    font-size: 12px;
     word-break: break-all;
     text-align: center;
   }
@@ -1521,7 +1368,7 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11.5px;
+    font-size: 12px;
   }
 
   /* Miner Selector tabs */
@@ -1533,7 +1380,7 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     flex: 1 1 30%;
     text-align: center;
     padding: 6px 4px;
-    font-size: 10px;
+    font-size: 10.5px;
   }
 
   /* Command generator fields */
@@ -1549,13 +1396,13 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
-    padding: 10px;
+    padding: 12px;
   }
   .cmd-display-snippet code {
     white-space: pre-wrap;
     word-break: break-all;
-    font-size: 11px;
-    line-height: 1.45;
+    font-size: 11.5px;
+    line-height: 1.5;
   }
   .cmd-display-snippet .btn-copy-chip {
     width: 100%;
@@ -1563,37 +1410,35 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: stretch;
   }
 
-  /* Explorer Header & Tab Buttons */
+  /* Explorer Header & Segmented Tabs */
   .explorer-header-bar {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
-    padding: 12px;
+    gap: 12px;
+    padding: 14px 16px;
   }
   .segmented-nav-tabs {
     width: 100%;
     display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
     gap: 6px;
+    padding-bottom: 2px;
   }
-  .segmented-tab-btn {
-    flex: 1;
-    justify-content: center;
-    padding: 8px 6px;
-    font-size: 11.5px;
-    gap: 5px;
-  }
-  .tab-txt-short {
-    display: inline;
-  }
-  .tab-txt-full {
+  .segmented-nav-tabs::-webkit-scrollbar {
     display: none;
   }
-  .tab-counter {
-    font-size: 9.5px;
-    padding: 1px 5px;
+  .segmented-tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 12px;
+    gap: 6px;
   }
   .explorer-filter-input {
     width: 100%;
@@ -1604,49 +1449,48 @@ table.luxor-table td.center, table.luxor-table th.center { text-align: center; }
   .footer-main-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 16px;
   }
   .footer-nav-links {
     flex-wrap: wrap;
-    gap: 12px 16px;
+    gap: 12px 18px;
   }
   .footer-copyright {
     flex-direction: column;
     gap: 6px;
-    font-size: 10.5px;
   }
 }
 
-/* Breakpoint 4: Ultra Narrow / Small Mobiles (< 360px) */
+/* Breakpoint 4: Ultra Narrow Mobiles (< 360px) */
 @media (max-width: 360px) {
   .luxor-container {
     padding: 0 10px 40px;
   }
   .kpi-value-massive {
-    font-size: 18px;
+    font-size: 22px;
   }
   .kpi-label {
-    font-size: 8.5px;
+    font-size: 9px;
   }
   .segmented-tab-btn {
-    padding: 7px 4px;
-    font-size: 10.5px;
+    padding: 7px 10px;
+    font-size: 11px;
   }
 }
 
 /* Mobile Toast centering */
 @media (max-width: 600px) {
   .pool-toast {
-    left: 50%;
-    right: auto;
-    bottom: 16px;
-    transform: translate(-50%, 20px);
+    left: 50% !important;
+    right: auto !important;
+    bottom: 16px !important;
+    transform: translate(-50%, 20px) !important;
     width: max-content;
     max-width: calc(100vw - 32px);
-    font-size: 11px;
-    padding: 8px 14px;
+    padding: 10px 16px;
+    box-sizing: border-box;
   }
   .pool-toast.show {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0) !important;
   }
 }
