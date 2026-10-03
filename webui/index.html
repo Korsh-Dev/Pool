@@ -47,9 +47,77 @@
           <span class="status-indicator-dot"></span>
           <span id="liveTxt">LIVE</span>
         </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer & Backdrop -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+    <div class="mobile-nav-header">
+      <div class="brand-block">
+        <img src="logo.png" alt="Korsh" class="brand-emblem-img">
+        <div class="brand-name">
+          KORSH <span class="sub">POOL</span>
+        </div>
+      </div>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close Navigation Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="mobile-nav-links">
+      <a href="#overview" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="#analytics-section" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Analytics &amp; Telemetry</span>
+      </a>
+      <a href="#stratum-section" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <span>Stratum Connection</span>
+      </a>
+      <a href="#explorer-section" class="mobile-nav-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <span>Data Explorer</span>
+      </a>
+
+      <div class="mobile-nav-divider"></div>
+      <div class="mobile-nav-section-title">Ecosystem Links</div>
+
+      <a href="https://explorer.korsh.org" target="_blank" rel="noopener" class="mobile-nav-link external">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+        <span>Official Explorer ↗</span>
+      </a>
+      <a href="https://korsh.org" target="_blank" rel="noopener" class="mobile-nav-link external">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>Official Website ↗</span>
+      </a>
+      <a href="https://t.me/korshcommunity" target="_blank" rel="noopener" class="mobile-nav-link external">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>Telegram Community ↗</span>
+      </a>
+      <a href="https://discord.gg/6xbqUWCDwu" target="_blank" rel="noopener" class="mobile-nav-link external">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6h0a14.5 14.5 0 0 0-4-1.2 12.6 12.6 0 0 0-.6 1.2 13.9 13.9 0 0 0-2.8 0 12.6 12.6 0 0 0-.6-1.2A14.5 14.5 0 0 0 6 6a17.4 17.4 0 0 0-2 11 13.6 13.6 0 0 0 5 2.5 12.3 12.3 0 0 0 1-1.6 8.8 8.8 0 0 1-1.6-.8l.3-.2a11.9 11.9 0 0 0 10.6 0l.3.2a8.8 8.8 0 0 1-1.6.8 12.3 12.3 0 0 0 1 1.6 13.6 13.6 0 0 0 5-2.5 17.4 17.4 0 0 0-2-11z"/></svg>
+        <span>Discord Server ↗</span>
+      </a>
+    </nav>
+
+    <div class="mobile-nav-footer">
+      <div class="mobile-nav-algo">Algorithm: <strong>YespowerKorsh (CPU)</strong></div>
+      <div class="mobile-nav-copy">&copy; 2026 Korsh Network &bull; Luxor-Grade UI</div>
+    </div>
+  </aside>
 
   <!-- ==========================================================================
        2. TOP MARKET / NETWORK TICKER RIBBON
@@ -91,10 +159,12 @@
       <!-- Command Bar Search Input -->
       <div class="command-search-wrapper">
         <div class="command-search-bar">
-          <svg class="command-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="text" id="minerAddressInput" class="command-input-field" placeholder="Paste your Korsh address to inspect rigs, shares & payouts..." autocomplete="off" spellcheck="false">
+          <div class="command-input-group">
+            <svg class="command-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="minerAddressInput" class="command-input-field" placeholder="Paste your Korsh address to inspect rigs, shares & payouts..." autocomplete="off" spellcheck="false">
+          </div>
           <div class="command-actions">
             <button class="btn-search-primary" id="lookupBtn">Track Rigs</button>
             <button class="btn-search-sample" id="demoAddrBtn" title="Load sample active miner">Sample</button>
@@ -386,15 +456,18 @@
       <div class="explorer-header-bar">
         <div class="segmented-nav-tabs">
           <button class="segmented-tab-btn active" id="tabBtnMiners">
-            <span>Active Miners</span>
+            <span class="tab-txt-full">Active Miners</span>
+            <span class="tab-txt-short">Miners</span>
             <span class="tab-counter" id="activeMinersBadge">0</span>
           </button>
           <button class="segmented-tab-btn" id="tabBtnBlocks">
-            <span>Discovered Blocks</span>
+            <span class="tab-txt-full">Discovered Blocks</span>
+            <span class="tab-txt-short">Blocks</span>
             <span class="tab-counter" id="blocksTableBadge">0</span>
           </button>
           <button class="segmented-tab-btn" id="tabBtnPayments">
-            <span>Recent Payouts</span>
+            <span class="tab-txt-full">Recent Payouts</span>
+            <span class="tab-txt-short">Payouts</span>
             <span class="tab-counter" id="paymentsTableBadge">0</span>
           </button>
         </div>

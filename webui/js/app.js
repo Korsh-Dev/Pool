@@ -448,13 +448,15 @@
     }
   }
 
-  // Interactive mouse move on chart wrapper
+  // Interactive mouse & touch on chart wrapper (Touch-enabled for mobile)
   if (chartWrapper && hashChartSvg) {
-    chartWrapper.addEventListener("mousemove", function (e) {
+    var touchHideTimer = null;
+
+    function handleChartPointer(clientX) {
       if (!cachedChartPoints.length) return;
       var rect = chartWrapper.getBoundingClientRect();
-      var mouseX = e.clientX - rect.left;
-      var normX = (mouseX / rect.width) * 1000;
+      var mouseX = clientX - rect.left;
+      var normX = Math.max(0, Math.min(1000, (mouseX / rect.width) * 1000));
 
       // Find closest data point
       var closest = cachedChartPoints.reduce(function (prev, curr) {
@@ -495,16 +497,46 @@
 
         var screenX = (closest.x / 1000) * rect.width;
         var screenY = (closest.y / 200) * rect.height;
-        chartTooltip.style.left = screenX + "px";
-        chartTooltip.style.top = screenY + "px";
+
+        // Dynamic horizontal clamp to prevent tooltip from overflowing off mobile screens
+        var tooltipW = chartTooltip.offsetWidth || 180;
+        var halfW = tooltipW / 2;
+        var clampedX = Math.max(halfW + 6, Math.min(rect.width - halfW - 6, screenX));
+
+        chartTooltip.style.left = clampedX + "px";
+        chartTooltip.style.top = Math.max(28, screenY) + "px";
         chartTooltip.classList.add("show");
       }
-    });
+    }
 
-    chartWrapper.addEventListener("mouseleave", function () {
+    function hideChartTooltip() {
       if (chartCrosshair) chartCrosshair.style.opacity = "0";
       if (chartHoverDot) chartHoverDot.style.opacity = "0";
       if (chartTooltip) chartTooltip.classList.remove("show");
+    }
+
+    chartWrapper.addEventListener("mousemove", function (e) {
+      handleChartPointer(e.clientX);
+    });
+
+    chartWrapper.addEventListener("mouseleave", hideChartTooltip);
+
+    chartWrapper.addEventListener("touchstart", function (e) {
+      if (touchHideTimer) clearTimeout(touchHideTimer);
+      if (e.touches && e.touches.length > 0) {
+        handleChartPointer(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    chartWrapper.addEventListener("touchmove", function (e) {
+      if (touchHideTimer) clearTimeout(touchHideTimer);
+      if (e.touches && e.touches.length > 0) {
+        handleChartPointer(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    chartWrapper.addEventListener("touchend", function () {
+      touchHideTimer = setTimeout(hideChartTooltip, 2400);
     });
   }
 
@@ -1340,6 +1372,62 @@
       switchExplorerTab("payments");
     });
   }
+
+  /* ==========================================================================
+     MOBILE NAVIGATION DRAWER CONTROLLER
+     ========================================================================== */
+  var mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  var mobileNavDrawer = document.getElementById("mobileNavDrawer");
+  var mobileNavBackdrop = document.getElementById("mobileNavBackdrop");
+  var mobileNavClose = document.getElementById("mobileNavClose");
+
+  function openMobileNav() {
+    if (mobileNavDrawer) mobileNavDrawer.classList.add("open");
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.add("open");
+    if (mobileMenuBtn) mobileMenuBtn.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMobileNav() {
+    if (mobileNavDrawer) mobileNavDrawer.classList.remove("open");
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.remove("open");
+    if (mobileMenuBtn) mobileMenuBtn.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", function () {
+      if (mobileNavDrawer && mobileNavDrawer.classList.contains("open")) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+  }
+
+  if (mobileNavClose) {
+    mobileNavClose.addEventListener("click", closeMobileNav);
+  }
+
+  if (mobileNavBackdrop) {
+    mobileNavBackdrop.addEventListener("click", closeMobileNav);
+  }
+
+  // Close drawer on any internal link click
+  if (mobileNavDrawer) {
+    mobileNavDrawer.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        closeMobileNav();
+      });
+    });
+  }
+
+  // Close drawer on ESC key
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && mobileNavDrawer && mobileNavDrawer.classList.contains("open")) {
+      closeMobileNav();
+    }
+  });
 
   /* ==========================================================================
      10. MAIN PERIODIC POLLING TICK
